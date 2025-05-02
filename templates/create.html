@@ -1,92 +1,168 @@
 {% extends "base.html" %}
-
 {% block title %}KarpPaste - Create New Paste{% endblock %}
-
 {% block content %}
 <div class="warning-banner">
-    <strong>Warning:</strong> All pastes are public and visible to everyone. Do not share sensitive information!
+    <strong>⚠️ Warning:</strong> All pastes are public and visible to everyone. Do not share sensitive information!
 </div>
 
-<h1 class="mb-4">Create New Paste</h1>
-
-<form method="POST" action="{{ url_for('create') }}">
-    <div class="mb-3">
-        <label for="title" class="form-label">Title (required)</label>
-        <input type="text" class="form-control" id="title" name="title" maxlength="100" required>
+<div class="card">
+    <div class="card-header">
+        Create New Paste
     </div>
-
-    <div class="mb-3">
-        <label for="language" class="form-label">Programming Language (optional)</label>
-        <select class="form-select" id="language" name="language">
-            <option value="">Plain Text</option>
-            <option value="python">Python</option>
-            <option value="javascript">JavaScript</option>
-            <option value="java">Java</option>
-            <option value="cpp">C++</option>
-            <option value="c">C</option>
-            <option value="php">PHP</option>
-            <option value="ruby">Ruby</option>
-            <option value="go">Go</option>
-            <option value="rust">Rust</option>
-            <option value="swift">Swift</option>
-            <option value="kotlin">Kotlin</option>
-            <option value="typescript">TypeScript</option>
-            <option value="scala">Scala</option>
-            <option value="haskell">Haskell</option>
-            <option value="lua">Lua</option>
-            <option value="perl">Perl</option>
-            <option value="r">R</option>
-            <option value="matlab">MATLAB</option>
-            <option value="scheme">Scheme</option>
-            <option value="prolog">Prolog</option>
-            <option value="clojure">Clojure</option>
-            <option value="erlang">Erlang</option>
-            <option value="elixir">Elixir</option>
-            <option value="fsharp">F#</option>
-            <option value="ocaml">OCaml</option>
-            <option value="coffeescript">CoffeeScript</option>
-            <option value="dart">Dart</option>
-            <option value="groovy">Groovy</option>
-            <option value="powershell">PowerShell</option>
-            <option value="vbnet">VB.NET</option>
-            <option value="csharp">C#</option>
-            <option value="fortran">Fortran</option>
-            <option value="pascal">Pascal</option>
-            <option value="ada">Ada</option>
-            <option value="lisp">Lisp</option>
-            <option value="smalltalk">Smalltalk</option>
-            <option value="verilog">Verilog</option>
-            <option value="vhdl">VHDL</option>
-            <option value="arduino">Arduino</option>
-            <option value="autohotkey">AutoHotkey</option>
-            <option value="batch">Batch</option>
-            <option value="cmake">CMake</option>
-            <option value="docker">Docker</option>
-            <option value="git">Git</option>
-            <option value="ini">INI</option>
-            <option value="julia">Julia</option>
-            <option value="latex">LaTeX</option>
-            <option value="makefile">Makefile</option>
-            <option value="nginx">Nginx</option>
-            <option value="protobuf">Protocol Buffers</option>
-            <option value="puppet">Puppet</option>
-            <option value="qml">QML</option>
-            <option value="sass">Sass</option>
-            <option value="scss">SCSS</option>
-            <option value="stylus">Stylus</option>
-            <option value="twig">Twig</option>
-            <option value="vim">Vim Script</option>
-            <option value="visual-basic">Visual Basic</option>
-            <option value="wolfram">Wolfram</option>
-            <option value="zig">Zig</option>
-        </select>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('create') }}">
+            <div class="form-group">
+                <label for="title">Title (required)</label>
+                <input type="text" class="form-control" id="title" name="title" maxlength="100" required 
+                       style="animation: fadeIn 0.8s ease-out;">
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="language">Programming Language (optional)</label>
+                <select class="form-select" id="language" name="language" 
+                        style="animation: slideUp 0.8s ease-out;">
+                    <option value="">Plain Text</option>
+                    <option value="python">Python</option>
+                    <option value="javascript">JavaScript</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                    <option value="c">C</option>
+                    <option value="php">PHP</option>
+                    <option value="ruby">Ruby</option>
+                    <option value="go">Go</option>
+                    <option value="rust">Rust</option>
+                    <option value="swift">Swift</option>
+                    <option value="kotlin">Kotlin</option>
+                    <option value="typescript">TypeScript</option>
+                    <option value="scala">Scala</option>
+                    <option value="haskell">Haskell</option>
+                    <option value="lua">Lua</option>
+                    <option value="perl">Perl</option>
+                    <option value="r">R</option>
+                    <option value="matlab">MATLAB</option>
+                    <option value="scheme">Scheme</option>
+                    <option value="prolog">Prolog</option>
+                    <option value="clojure">Clojure</option>
+                    <option value="erlang">Erlang</option>
+                    <option value="elixir">Elixir</option>
+                    <option value="fsharp">F#</option>
+                    <option value="ocaml">OCaml</option>
+                    <option value="coffeescript">CoffeeScript</option>
+                    <option value="dart">Dart</option>
+                    <option value="groovy">Groovy</option>
+                    <option value="powershell">PowerShell</option>
+                    <option value="vbnet">VB.NET</option>
+                    <option value="csharp">C#</option>
+                    <option value="fortran">Fortran</option>
+                    <option value="pascal">Pascal</option>
+                    <option value="ada">Ada</option>
+                    <option value="lisp">Lisp</option>
+                    <option value="smalltalk">Smalltalk</option>
+                    <option value="verilog">Verilog</option>
+                    <option value="vhdl">VHDL</option>
+                    <option value="arduino">Arduino</option>
+                    <option value="autohotkey">AutoHotkey</option>
+                    <option value="batch">Batch</option>
+                    <option value="cmake">CMake</option>
+                    <option value="docker">Docker</option>
+                    <option value="git">Git</option>
+                    <option value="ini">INI</option>
+                    <option value="julia">Julia</option>
+                    <option value="latex">LaTeX</option>
+                    <option value="makefile">Makefile</option>
+                    <option value="nginx">Nginx</option>
+                    <option value="protobuf">Protocol Buffers</option>
+                    <option value="puppet">Puppet</option>
+                    <option value="qml">QML</option>
+                    <option value="sass">Sass</option>
+                    <option value="scss">SCSS</option>
+                    <option value="stylus">Stylus</option>
+                    <option value="twig">Twig</option>
+                    <option value="vim">Vim Script</option>
+                    <option value="visual-basic">Visual Basic</option>
+                    <option value="wolfram">Wolfram</option>
+                    <option value="zig">Zig</option>
+                </select>
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="content">Content (required)</label>
+                <textarea class="form-control" id="content" name="content" rows="15" required
+                          style="animation: slideUp 1s ease-out; resize: vertical;"></textarea>
+            </div>
+            
+            <div style="margin-top: 25px;">
+                <button type="submit" class="btn btn-primary">
+                    Create Paste
+                </button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label for="content" class="form-label">Content (required)</label>
-        <textarea class="form-control" id="content" name="content" rows="15" required></textarea>
-    </div>
+<script>
+    // Анимации для формы
+    document.addEventListener('DOMContentLoaded', function() {
+        // Задержка для элементов формы
+        const formElements = document.querySelectorAll('.form-control, .form-select, .btn');
+        formElements.forEach((element, index) => {
+            // Добавляем анимации с задержкой
+            element.style.opacity = "0";
+            element.style.animation = "none";
+            
+            setTimeout(() => {
+                element.style.opacity = "1";
+                if (element.tagName.toLowerCase() === 'button') {
+                    element.style.animation = "pulse 2s infinite";
+                } else if (element.tagName.toLowerCase() === 'select') {
+                    element.style.animation = "slideUp 0.5s ease-out forwards";
+                } else {
+                    element.style.animation = "fadeIn 0.5s ease-out forwards";
+                }
+            }, 100 * (index + 1));
+        });
+        
+        // Добавляем эффект свечения для кнопки при наведении
+        const submitButton = document.querySelector('button[type="submit"]');
+        submitButton.addEventListener('mouseover', function() {
+            this.style.animation = "pulse 0.5s infinite";
+        });
+        
+        submitButton.addEventListener('mouseout', function() {
+            this.style.animation = "none";
+        });
+        
+        // Анимация для предупреждения
+        const warningBanner = document.querySelector('.warning-banner');
+        warningBanner.style.animation = "float 4s ease-in-out infinite";
+        
+        // Эффект фокуса для текстовых полей
+        const textInputs = document.querySelectorAll('input[type="text"], textarea');
+        textInputs.forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.boxShadow = "0 0 15px rgba(255, 215, 0, 0.5)";
+                this.style.transition = "all 0.3s ease";
+            });
+            
+            input.addEventListener('blur', function() {
+                this.style.boxShadow = "";
+            });
+        });
+    });
 
-    <button type="submit" class="btn btn-primary">Create Paste</button>
-</form>
-{% endblock %} 
+    // Добавляем анимацию ввода для текстовой области
+    const contentArea = document.getElementById('content');
+    if (contentArea) {
+        contentArea.addEventListener('input', function() {
+            // Создаем эффект ряби при вводе текста
+            this.style.transition = "none";
+            this.style.transform = "translateY(1px)";
+            
+            setTimeout(() => {
+                this.style.transition = "transform 0.3s ease";
+                this.style.transform = "translateY(0)";
+            }, 50);
+        });
+    }
+</script>
+{% endblock %}
