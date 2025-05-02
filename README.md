@@ -16,13 +16,13 @@ A simple web application for sharing text and code snippets. All pastes are publ
 1. Clone the repository:
 ```bash
 git clone https://github.com/yourusername/publicpaste.git
-cd publicpaste
+cd karpPaste
 ```
 
 2. Create a virtual environment and activate it:
 ```bash
 python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate
 ```
 
 3. Install dependencies:
@@ -45,9 +45,6 @@ The application will be available at `http://localhost:5000`
 4. Optionally select a programming language for syntax highlighting
 5. Click "Create Paste" to save and share your paste
 
-## Warning
-
-All pastes are public and visible to everyone. Do not share sensitive or confidential information!
 
 ## License
 
