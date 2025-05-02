@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline';">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="no-referrer">
+    <title>{% block title %}PublicPaste{% endblock %}</title>
+    <style>
+        :root {
+            --main-color: #4B0082;
+            --accent-color: #DA70D6;
+            --text-dark: #2E2E2E;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #F5F0FF;
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background: var(--main-color) !important;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.1);
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white !important;
+        }
+
+        .nav-link {
+            color: rgba(255, 255, 255, 0.8) !important;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: white !important;
+        }
+
+        .warning-banner {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(75, 0, 130, 0.1);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.1);
+            animation: slideUp 0.8s ease-out;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: var(--main-color);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+        }
+
+        .paste-content {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 10px 0;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .list-group-item {
+            border: none;
+            margin-bottom: 10px;
+            border-radius: 10px !important;
+            box-shadow: 0 3px 10px rgba(75, 0, 130, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .list-group-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--main-color);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(75, 0, 130, 0.2);
+        }
+
+        .form-control, .form-select {
+            border-radius: 10px;
+            border: 2px solid #e0d0ff;
+            padding: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.25rem rgba(218, 112, 214, 0.25);
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        .badge.bg-secondary {
+            background: var(--main-color) !important;
+        }
+
+        .badge.bg-info {
+            background: var(--accent-color) !important;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive styles */
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .card {
+                margin: 0 -15px;
+            }
+        }
+
+        /* Syntax highlighting styles */
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Custom syntax highlighting colors */
+        .token.comment { color: #6a9955; }
+        .token.keyword { color: #569cd6; }
+        .token.string { color: #ce9178; }
+        .token.number { color: #b5cea8; }
+        .token.function { color: #dcdcaa; }
+        .token.operator { color: #d4d4d4; }
+        .token.punctuation { color: #d4d4d4; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">PublicPaste</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/create">New Paste</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Simple syntax highlighting function
+        function highlightSyntax(code, language) {
+            // Basic syntax highlighting rules
+            const rules = {
+                'python': {
+                    keywords: /\b(and|as|assert|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b/g,
+                    strings: /(['"])(?:(?!\1)[^\\]|\\.)*\1/g,
+                    comments: /#.*$/gm,
+                    numbers: /\b\d+\b/g,
+                    functions: /\b\w+(?=\()/g
+                },
+                'javascript': {
+                    keywords: /\b(break|case|catch|class|const|continue|debugger|default|delete|do|else|export|extends|finally|for|function|if|import|in|instanceof|new|return|super|switch|this|throw|try|typeof|var|void|while|with|yield)\b/g,
+                    strings: /(['"])(?:(?!\1)[^\\]|\\.)*\1/g,
+                    comments: /\/\/.*$|\/\*[\s\S]*?\*\//gm,
+                    numbers: /\b\d+\b/g,
+                    functions: /\b\w+(?=\()/g
+                }
+            };
+
+            if (rules[language]) {
+                const rule = rules[language];
+                code = code
+                    .replace(rule.keywords, '<span class="token keyword">$&</span>')
+                    .replace(rule.strings, '<span class="token string">$&</span>')
+                    .replace(rule.comments, '<span class="token comment">$&</span>')
+                    .replace(rule.numbers, '<span class="token number">$&</span>')
+                    .replace(rule.functions, '<span class="token function">$&</span>');
+            }
+
+            return code;
+        }
+
+        // Apply syntax highlighting to all code blocks
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('pre code');
+            codeBlocks.forEach(block => {
+                const language = block.className.match(/language-(\w+)/);
+                if (language) {
+                    block.innerHTML = highlightSyntax(block.textContent, language[1]);
+                }
+            });
+        });
+    </script>
+</body>
+</html> 

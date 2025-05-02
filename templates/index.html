@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}PublicPaste - All Pastes{% endblock %}
+
+{% block content %}
+<div class="warning-banner">
+    <strong>Warning:</strong> All pastes are public and visible to everyone. Do not share sensitive information!
+</div>
+
+<h1 class="mb-4">Recent Pastes</h1>
+
+{% if pastes %}
+    <div class="list-group">
+        {% for paste in pastes %}
+            <a href="{{ url_for('view_paste', paste_id=paste.id) }}" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ paste.title }}</h5>
+                    <small>{{ paste.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+                <p class="mb-1">
+                    {% if paste.language %}
+                        <span class="badge bg-secondary">{{ paste.language }}</span>
+                    {% endif %}
+                    <span class="badge bg-info">Views: {{ paste.views }}</span>
+                </p>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        No pastes yet. Be the first to <a href="{{ url_for('create') }}">create one</a>!
+    </div>
+{% endif %}
+{% endblock %} 
