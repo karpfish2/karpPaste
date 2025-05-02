@@ -1,34 +1,178 @@
 {% extends "base.html" %}
-
 {% block title %}KarpPaste - All Pastes{% endblock %}
-
 {% block content %}
 <div class="warning-banner">
-    <strong>Warning:</strong> All pastes are public and visible to everyone. Do not share sensitive information!
+    <strong>⚠️ Warning:</strong> All pastes are public and visible to everyone. Do not share sensitive information!
 </div>
 
-<h1 class="mb-4">Recent Pastes</h1>
+<div class="card">
+    <div class="card-header">
+        Recent Pastes
+    </div>
+    <div class="card-body">
+        {% if pastes %}
+            <div class="list-group">
+                {% for paste in pastes %}
+                    <a href="{{ url_for('view_paste', paste_id=paste.id) }}" class="list-group-item">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h5 style="margin-bottom: 8px; font-weight: 600; color: #996600;">{{ paste.title }}</h5>
+                            <small style="color: #666; font-style: italic;">{{ paste.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                        </div>
+                        <div style="margin-top: 8px;">
+                            {% if paste.language %}
+                                <span class="badge bg-secondary">{{ paste.language }}</span>
+                            {% endif %}
+                            <span class="badge bg-info">Views: {{ paste.views }}</span>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div style="background-color: #fff9e6; color: #995500; padding: 15px; border-radius: 10px; border-left: 4px solid #FFD700; animation: fadeIn 1s ease-out;">
+                No pastes yet. Be the first to <a href="{{ url_for('create') }}" style="color: #B8860B; font-weight: bold; text-decoration: none; border-bottom: 1px dotted #B8860B;">create one</a>!
+            </div>
+        {% endif %}
+    </div>
+</div>
 
 {% if pastes %}
-    <div class="list-group">
-        {% for paste in pastes %}
-            <a href="{{ url_for('view_paste', paste_id=paste.id) }}" class="list-group-item list-group-item-action">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ paste.title }}</h5>
-                    <small>{{ paste.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
-                </div>
-                <p class="mb-1">
-                    {% if paste.language %}
-                        <span class="badge bg-secondary">{{ paste.language }}</span>
-                    {% endif %}
-                    <span class="badge bg-info">Views: {{ paste.views }}</span>
-                </p>
-            </a>
-        {% endfor %}
-    </div>
-{% else %}
-    <div class="alert alert-info">
-        No pastes yet. Be the first to <a href="{{ url_for('create') }}">create one</a>!
-    </div>
+<div style="margin-top: 20px; text-align: center; animation: fadeIn 1.5s ease-out;">
+    <a href="{{ url_for('create') }}" class="btn btn-primary" style="animation: pulse 2s infinite;">
+        Create New Paste
+    </a>
+</div>
 {% endif %}
-{% endblock %} 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Анимация для баннера с предупреждением
+        const warningBanner = document.querySelector('.warning-banner');
+        warningBanner.style.animation = "float 4s ease-in-out infinite";
+        
+        // Анимация для списка паст
+        const pasteItems = document.querySelectorAll('.list-group-item');
+        pasteItems.forEach((item, index) => {
+            // Устанавливаем начальные стили для анимации
+            item.style.opacity = "0";
+            item.style.transform = "translateX(-20px)";
+            item.style.transition = "opacity 0.5s ease, transform 0.5s ease, box-shadow 0.3s ease, background-color 0.3s ease";
+            
+            // Добавляем анимацию с задержкой
+            setTimeout(() => {
+                item.style.opacity = "1";
+                item.style.transform = "translateX(0)";
+            }, 100 * (index + 1));
+            
+            // Добавляем эффекты при наведении
+            item.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = "#FFFACD";
+                this.style.boxShadow = "0 5px 15px rgba(184, 134, 11, 0.2)";
+                this.style.transform = "translateX(5px)";
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = "white";
+                this.style.boxShadow = "0 3px 10px rgba(184, 134, 11, 0.1)";
+                this.style.transform = "translateX(0)";
+            });
+            
+            // Добавляем эффект нажатия
+            item.addEventListener('mousedown', function() {
+                this.style.transform = "translateX(5px) scale(0.98)";
+                this.style.boxShadow = "0 2px 8px rgba(184, 134, 11, 0.15)";
+            });
+            
+            item.addEventListener('mouseup', function() {
+                this.style.transform = "translateX(5px) scale(1)";
+                this.style.boxShadow = "0 5px 15px rgba(184, 134, 11, 0.2)";
+            });
+        });
+        
+        // Анимация для бейджей
+        const badges = document.querySelectorAll('.badge');
+        badges.forEach(badge => {
+            badge.style.transition = "transform 0.3s ease";
+            
+            badge.addEventListener('mouseenter', function() {
+                this.style.transform = "scale(1.1)";
+            });
+            
+            badge.addEventListener('mouseleave', function() {
+                this.style.transform = "scale(1)";
+            });
+        });
+        
+        // Добавляем эффект сияния при загрузке для заголовка карточки
+        const cardHeader = document.querySelector('.card-header');
+        if (cardHeader) {
+            cardHeader.style.position = "relative";
+            cardHeader.style.overflow = "hidden";
+            
+            cardHeader.innerHTML += '<div class="shine-effect"></div>';
+            
+            const shineEffect = document.querySelector('.shine-effect');
+            shineEffect.style.position = "absolute";
+            shineEffect.style.top = "0";
+            shineEffect.style.left = "0";
+            shineEffect.style.width = "100%";
+            shineEffect.style.height = "100%";
+            shineEffect.style.background = "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)";
+            shineEffect.style.backgroundSize = "200% 100%";
+            shineEffect.style.animation = "shine 2s ease-in-out";
+        }
+        
+        // Анимация для кнопки создания пасты
+        const createButton = document.querySelector('.btn-primary');
+        if (createButton) {
+            createButton.addEventListener('mouseenter', function() {
+                this.style.animation = "pulse 0.5s infinite";
+            });
+            
+            createButton.addEventListener('mouseleave', function() {
+                this.style.animation = "pulse 2s infinite";
+            });
+            
+            createButton.addEventListener('mousedown', function() {
+                this.style.transform = "scale(0.95)";
+            });
+            
+            createButton.addEventListener('mouseup', function() {
+                this.style.transform = "scale(1)";
+            });
+        }
+    });
+</script>
+
+<style>
+    /* Дополнительные стили для страницы */
+    @keyframes shine {
+        0% { background-position: -100% 0; }
+        100% { background-position: 200% 0; }
+    }
+    
+    /* Стили для пустого списка */
+    .empty-list {
+        text-align: center;
+        padding: 30px 15px;
+        border-radius: 10px;
+        background: #FFFAF0;
+        border: 1px dashed #FFD700;
+        animation: pulse 2s infinite;
+        margin: 20px 0;
+    }
+    
+    /* Стили для времени создания пасты */
+    .paste-time {
+        font-size: 0.85rem;
+        color: #775500;
+        font-style: italic;
+    }
+    
+    /* Улучшенный стиль для бейджей */
+    .badge {
+        display: inline-block;
+        margin-right: 5px;
+        animation: fadeIn 1.5s ease-out;
+    }
+</style>
+{% endblock %}
