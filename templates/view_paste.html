@@ -1,13 +1,198 @@
 {% extends "base.html" %}
-
 {% block title %}KarpPaste - {{ paste.title }}{% endblock %}
 
+{% block head %}
+{{ super() }}
+<style>
+    :root {
+        --primary-color: #ffc107;
+        --secondary-color: #ffeb3b;
+        --accent-color: #ff9800;
+        --dark-color: #333333;
+        --light-color: #fff8e1;
+        --text-color: #333333;
+    }
+    
+    body {
+        background-color: var(--light-color);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+    }
+    
+    .warning-banner {
+        background-color: var(--accent-color);
+        color: var(--dark-color);
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        text-align: center;
+        font-weight: bold;
+        animation: pulse 2s infinite;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+        100% { transform: scale(1); }
+    }
+    
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+        background-color: var(--primary-color);
+        color: var(--dark-color);
+        padding: 15px 20px;
+        border-bottom: 3px solid var(--accent-color);
+    }
+    
+    .card-body {
+        padding: 20px;
+        background-color: #fffdf5;
+    }
+    
+    .badge {
+        padding: 6px 12px;
+        border-radius: 20px;
+        margin-left: 5px;
+        font-weight: normal;
+        transition: all 0.3s ease;
+    }
+    
+    .badge:hover {
+        transform: scale(1.1);
+    }
+    
+    .bg-secondary {
+        background-color: var(--secondary-color) !important;
+        color: var(--dark-color) !important;
+    }
+    
+    .bg-info {
+        background-color: var(--accent-color) !important;
+        color: white !important;
+    }
+    
+    .paste-content {
+        background-color: #fff;
+        border-radius: 8px;
+        border: 1px solid #ffe082;
+        padding: 15px;
+        max-height: 600px;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+    }
+    
+    .paste-content:hover {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+    }
+    
+    pre {
+        margin: 0;
+        white-space: pre-wrap;
+        font-size: 0.9rem;
+    }
+    
+    code {
+        font-family: 'Courier New', monospace;
+    }
+    
+    .input-group {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .form-control {
+        border-color: #ffe082;
+        background-color: #fffdf5;
+        color: var(--dark-color);
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(255, 193, 7, 0.25);
+    }
+    
+    .btn-outline-secondary {
+        border-color: var(--primary-color);
+        color: var(--dark-color);
+        background-color: var(--primary-color);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: var(--accent-color);
+        border-color: var(--accent-color);
+        color: white;
+        transform: translateX(3px);
+    }
+    
+    .text-muted {
+        color: #996515 !important;
+    }
+    
+    /* Tor Optimization Styles */
+    img {
+        display: none; /* Disable images for better Tor performance */
+    }
+    
+    /* Reduced animations for Tor version (enabled by default) */
+    .reduced-motion {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    /* Will be toggled with JS */
+    .animations-enabled .card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .loading-indicator {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--primary-color);
+        color: var(--dark-color);
+        padding: 15px 20px;
+        border-radius: 8px;
+        z-index: 1000;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+        * {
+            animation: none !important;
+            transition: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
+<div class="loading-indicator">Loading...</div>
+
 <div class="warning-banner">
     <strong>Warning:</strong> All pastes are public and visible to everyone. Do not share sensitive information!
 </div>
 
-<div class="card">
+<div class="card animate-in">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h2 class="mb-0">{{ paste.title }}</h2>
         <div>
@@ -31,18 +216,118 @@
         <div class="mt-3">
             <div class="input-group">
                 <input type="text" class="form-control" id="paste-url" value="{{ request.url }}" readonly>
-                <button class="btn btn-outline-secondary" type="button" onclick="copyToClipboard()">Copy URL</button>
+                <button class="btn btn-outline-secondary" type="button" id="copy-button">Copy URL</button>
+            </div>
+            <div class="mt-3 d-flex justify-content-between">
+                <button class="btn btn-sm btn-warning" id="toggle-animations">Toggle Animations</button>
+                <button class="btn btn-sm btn-warning" id="toggle-theme">High Contrast</button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+// Simple feature detection for minimal JS
+const isTor = navigator.userAgent.toLowerCase().indexOf('tor') !== -1 || 
+              performance.now() < 0.1; // Simplified check, not bulletproof
+
+// By default, use reduced animations for suspected Tor users
+document.body.classList.add(isTor ? 'reduced-motion' : 'animations-enabled');
+
+// Copy functionality with fallback
 function copyToClipboard() {
     const urlInput = document.getElementById('paste-url');
-    urlInput.select();
-    document.execCommand('copy');
-    alert('URL copied to clipboard!');
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(urlInput.value)
+            .then(() => {
+                showNotification('URL copied to clipboard!');
+            })
+            .catch(() => {
+                fallbackCopy(urlInput);
+            });
+    } else {
+        fallbackCopy(urlInput);
+    }
 }
+
+function fallbackCopy(element) {
+    element.select();
+    try {
+        document.execCommand('copy');
+        showNotification('URL copied to clipboard!');
+    } catch (err) {
+        showNotification('Failed to copy. Please copy manually.');
+    }
+}
+
+function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.position = 'fixed';
+    notification.style.bottom = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.backgroundColor = 'var(--primary-color)';
+    notification.style.color = 'var(--dark-color)';
+    notification.style.padding = '10px 20px';
+    notification.style.borderRadius = '5px';
+    notification.style.zIndex = '1000';
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        notification.style.transition = 'opacity 1s ease';
+        setTimeout(() => document.body.removeChild(notification), 1000);
+    }, 2000);
+}
+
+// Event Listeners
+document.getElementById('copy-button').addEventListener('click', copyToClipboard);
+
+document.getElementById('toggle-animations').addEventListener('click', function() {
+    document.body.classList.toggle('reduced-motion');
+    document.body.classList.toggle('animations-enabled');
+    showNotification(document.body.classList.contains('reduced-motion') ? 
+                   'Animations disabled' : 'Animations enabled');
+});
+
+document.getElementById('toggle-theme').addEventListener('click', function() {
+    document.body.classList.toggle('high-contrast');
+    
+    if (document.body.classList.contains('high-contrast')) {
+        document.documentElement.style.setProperty('--light-color', '#000');
+        document.documentElement.style.setProperty('--text-color', '#ffff00');
+        document.documentElement.style.setProperty('--primary-color', '#ffff00');
+        showNotification('High contrast enabled');
+    } else {
+        document.documentElement.style.setProperty('--light-color', '#fff8e1');
+        document.documentElement.style.setProperty('--text-color', '#333333');
+        document.documentElement.style.setProperty('--primary-color', '#ffc107');
+        showNotification('Normal contrast restored');
+    }
+});
+
+// Page load optimization
+window.addEventListener('DOMContentLoaded', function() {
+    // Hide loading indicator
+    document.querySelector('.loading-indicator').style.display = 'none';
+    
+    // Don't load syntax highlighting for Tor users
+    if (!isTor && document.querySelector('.language-')) {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js';
+        script.onload = function() {
+            hljs.highlightAll();
+        };
+        document.head.appendChild(script);
+        
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-dark.min.css';
+        document.head.appendChild(link);
+    }
+});
 </script>
-{% endblock %} 
+{% endblock %}
