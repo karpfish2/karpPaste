@@ -1,4 +1,4 @@
-# PublicPaste
+# karpPaste
 
 A simple web application for sharing text and code snippets. All pastes are public by default, and no user registration is required.
 
