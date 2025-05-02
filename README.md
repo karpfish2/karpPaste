@@ -15,7 +15,7 @@ A simple web application for sharing text and code snippets. All pastes are publ
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/publicpaste.git
+git clone https://github.com/karpfish2/karpPaste.git
 cd karpPaste
 ```
 
