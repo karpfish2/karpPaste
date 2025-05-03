@@ -63,5 +63,14 @@ def view_paste(paste_id):
     db.session.commit()
     return render_template('view_paste.html', paste=paste)
 
+@app.route('/paste/<int:paste_id>/raw')
+def view_raw_paste(paste_id):
+    paste = Paste.query.get_or_404(paste_id)
+    paste.views += 1
+    db.session.commit()
+    response = make_response(paste.content)
+    response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True, host='127.0.0.1', port=5000) 
